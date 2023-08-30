@@ -26,7 +26,6 @@ public class PostTag {
     private LocalDateTime updatedAt;
 
     public PostTag() {
-        createdAt = LocalDateTime.now();
     }
 
     public int getId() {
