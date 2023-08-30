@@ -1,7 +1,6 @@
 package com.murthy.blog.service.implementation;
 
 import com.murthy.blog.model.Comment;
-import com.murthy.blog.model.Post;
 import com.murthy.blog.repository.CommentRepository;
 import com.murthy.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,6 @@ public class CommentServiceImplementation implements CommentService {
 
             throw new RuntimeException("Did not find comment id - " + id);
         }
-
         return theComment;
     }
 

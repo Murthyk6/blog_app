@@ -141,14 +141,6 @@ public class BlogController {
         postService.deleteById(postId);
         return "redirect:/feed";
     }
-
-
-//    @GetMapping("/drafts")
-//    public String draftPosts(Model model){
-//        List<Post> posts = postService.draftPosts();
-//        model.addAttribute("posts",posts);
-//        return "/blog/draftPosts";
-//    }
 }
 
 

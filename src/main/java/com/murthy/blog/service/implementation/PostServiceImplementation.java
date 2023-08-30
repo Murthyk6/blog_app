@@ -29,7 +29,6 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
     public Post findById(int id) {
 
         Optional<Post> post = postRepository.findById(id);
-        System.out.println(post.get());
         Post thePost;
 
         if (post.isPresent()) {
@@ -38,7 +37,6 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
         else {
             thePost = new Post();
         }
-
         return thePost;
     }
 
@@ -50,8 +48,6 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
 
     @Override
     public void deleteById(int id) {
-        System.out.println("enter 2");
-        System.out.println(id);
         commentService.deleteByPostId(id);
         postRepository.deleteById(id);
     }
@@ -68,7 +64,6 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
 
     @Override
     public Set<String> getAllDistinctAuthor() {
-
         return postRepository.getAllDistinctAuthor();
     }
 
@@ -88,7 +83,8 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
     }
 
     @Override
-    public Page<Post> allPost(List<String> authors, List<String> tags, LocalDateTime fromTimestamp,LocalDateTime toTimestamp, Pageable pageable) {
+    public Page<Post> allPost(List<String> authors, List<String> tags, LocalDateTime fromTimestamp,
+                              LocalDateTime toTimestamp, Pageable pageable) {
 
         int isEmptyAuthor = authors.isEmpty() ? 1 : 0 ;
         int isEmptyTag = tags.isEmpty() ? 1 : 0 ;
@@ -105,7 +101,8 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
     }
 
     @Override
-    public Page<Post> searchPostsWithFilters(String searchTerm, List<String> authors,List<String> tags, LocalDateTime fromTimestamp,LocalDateTime toTimestamp,Pageable pageable) {
+    public Page<Post> searchPostsWithFilters(String searchTerm, List<String> authors,List<String> tags,
+                                             LocalDateTime fromTimestamp,LocalDateTime toTimestamp,Pageable pageable) {
         int isEmptyAuthor = authors.isEmpty() ? 1 : 0 ;
         int isEmptyTag = tags.isEmpty() ? 1 : 0 ;
 
@@ -116,6 +113,7 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
             Optional<LocalDateTime> timestamp = postRepository.findOldestPublishedDate();
             fromTimestamp = timestamp.get();
         }
-        return postRepository.searchPostsWithFilters(searchTerm,isEmptyAuthor,isEmptyTag,authors,tags,fromTimestamp,toTimestamp,pageable);
+        return postRepository.searchPostsWithFilters(searchTerm,isEmptyAuthor,isEmptyTag,authors,tags,fromTimestamp,
+                toTimestamp,pageable);
     }
 }
