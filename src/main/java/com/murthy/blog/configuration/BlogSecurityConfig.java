@@ -31,11 +31,6 @@ public class BlogSecurityConfig {
 
         http.authorizeHttpRequests(configurer ->
                 configurer
-//                        .requestMatchers("/feed**","/register").permitAll()
-//                        .requestMatchers("/blog/full_post**").permitAll()
-//                        .requestMatchers("/comment/save").permitAll()
-//                        .requestMatchers("/blog/drafts").hasAnyRole("AUTHOR","ADMIN")
-//                        .requestMatchers("/blog/**").hasAnyRole("AUTHOR","ADMIN")
                         .requestMatchers("/comment/edit","/comment/delete").hasAnyRole("AUTHOR","ADMIN")
                         .requestMatchers("/comment/save").permitAll()
                         .requestMatchers("/profile").authenticated()
