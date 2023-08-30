@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      max-width: 800px;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .btn-primary, .btn-danger {
+      text-decoration: none;
+      color: black;
+      background-color: white;
+      border-color: black;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 95%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .comments {
+      margin-top: 20px;
+    }
+
+    .comment {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment strong {
+      font-weight: bold;
+    }
+
+    .comment-actions {
+      margin-top: 10px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+
+  <title>Full Blog Post</title>
+</head>
+
+<body>
+
+<div class="container mt-4">
+  <h2 th:text="${post.title}"></h2>
+  <p th:text="${post.author}"></p>
+  <hr>
+<!--  <span sec:authorize="isAuthenticated()">-->
+<!--    <span sec:authentication="principal.authorities"></span>-->
+<!--    <div class="d-flex justify-content-end mb-3">-->
+<!--      <form th:action="@{/blog/edit}" method="post">-->
+<!--        <input type="hidden" name="postId" th:value="${post.id}">-->
+<!--        <button type="submit" class="btn btn-primary">Edit</button>-->
+<!--      </form>-->
+
+<!--      <form th:action="@{/blog/delete}" method="post" class="ms-2">-->
+<!--        <input type="hidden" name="postId" th:value="${post.id}">-->
+<!--        <button type="submit" class="btn btn-danger">Delete</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </span>-->
+<!--  <span sec:authorize="hasRole('ADMIN')">-->
+<!--  <div th:if="${post.author == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}">-->
+
+  <span sec:authorize="isAuthenticated()">
+   <div th:if="${user.email == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}">
+    <div class="d-flex justify-content-end mb-3">
+      <form th:action="@{/blog/edit}" method="post">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </form>
+      <form th:action="@{/blog/delete}" method="post" class="ms-2">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+      </div>
+  </span>
+<!--  -->
+  <div th:utext="${post.content}"></div>
+  <div>
+    <h4>Tags:</h4>
+    <span th:each="tag, tagStatus : ${post.tags}">
+      <span th:text="${tag.name}"></span>
+      <p th:if="${!tagStatus.last}"></p>
+    </span>
+  </div>
+  <hr>
+  <a th:href="@{/feed}">Back to feed</a>
+</div>
+
+<h2>Add a Comment</h2>
+<form th:action="@{/comment/save}" method="post" th:object="${comment}" class="comment">
+  <input type="hidden" name="postId" th:value="${post.id}" />
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="${comment.name}" required />
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="${comment.email}" required />
+  </div>
+  <div>
+    <label for="comment">Comment:</label>
+    <textarea id="comment" th:field="${comment.theComment}" required></textarea>
+  </div>
+  <div>
+    <button type="submit" class="btn-primary">Submit Comment</button>
+  </div>
+</form>
+
+<div class="comments">
+  <h2>Comments:</h2>
+  <ul>
+    <li th:each="comment : ${comments}">
+      <div class="comment">
+        <p><strong th:text="${comment.name}"></strong></p>
+        <p th:text="${comment.theComment}"></p>
+        <label for="createdAt" class="form-label">Created At</label>
+        <p th:text="${comment.createdAt}" id="createdAt"></p>
+        <span sec:authorize="isAuthenticated()">
+          <div th:if="${user.email == #authentication.principal.username}">
+            <div class="comment-actions">
+              <form th:action="@{/comment/edit}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <input type="hidden" name="commentId" th:value="${comment.id}">
+                <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+              </form>
+
+              <form th:action="@{/comment/delete}" method="post" class="ms-2">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <input type="hidden" name="commentId" th:value="${comment.id}">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: grey;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-top: 50px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            color: black;
+            border-color: black;
+            font-size: 22px;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: black;
+            text-decoration: none;
+        }
+
+        .btn {
+            background-color: white;
+            color: black;
+            border: 1px solid;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+
+  <title>Blog Post</title>
+</head>
+
+<body>
+
+<div class="container">
+  <form action="#" th:action="@{/blog/save}" th:object="${post}" method="post">
+    <input type="hidden" name="postId" th:value="${post.id}">
+    <input type="hidden" name="comment" th:object="${comment}">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title" th:value="${post.title}" required>
+    </div>
+    <span sec:authorize="isAuthenticated()">
+    <div class="mb-3" th:if="${#authorization.expression('hasRole(''AUTHOR'')')}" >
+      <label for="author" class="form-label">Author</label>
+      <input type="text" class="form-control" id="author" name="author" th:value="${post.author}" required readonly>
+    </div>
+    </span>
+    <span sec:authorize="isAuthenticated()">
+       <div class="mb-3" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
+      <label for="author" class="form-label">Author</label>
+      <input type="text" class="form-control" name="author" th:value="${post.author}" required>
+    </div>
+    </span>
+    <div class="mb-3">
+      <label for="content" class="form-label">Content</label>
+      <textarea class="form-control" id="content" name="content" rows="4" th:text="${post.content}" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="tags" class="form-label">Tags</label>
+      <input type="text" class="form-control" id="tags" name="tagStr" th:value="${tagStr}">
+      <small class="form-text text-muted">Enter Space-separated tags for the post.</small>
+    </div>
+    <div class="mb-3">
+      <label for="createdAt" class="form-label">Created At</label>
+      <p th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}" id="createdAt"></p>
+      <input type="hidden" name="createdAt" th:value="${post.createdAt}">
+    </div>
+    <button type="submit" class="btn btn-secondary ml-2" name="saveType" value="draft">Draft</button>
+    <button type="submit" class="btn btn-primary" name="saveType" value="publish">Publish</button>
+
+    <a href="javascript:history.back()" class="btn btn-secondary ml-2">Cancel</a>
+  </form>
+</div>
+
+</body>
+</html>

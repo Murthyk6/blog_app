@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .btn-primary {
+            color: black;
+            border-color: black;
+        }
+        .btn-secondary {
+            background-color: white;
+            color: black;
+            text-decoration: none;
+        }
+        .btn {
+            background-color: white;
+            color: black;
+            border: 1px solid;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .form-text {
+            color: #6c757d;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Edit Comment</h2>
+    <form th:action="@{/comment/update}" method="post" th:object="${comment}">
+        <input type="hidden" name="commentId" th:value="${comment.id}" />
+        <input type="hidden" name="postId" th:value="${postId}" />
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" th:value="${comment.name}" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:value="${comment.email}" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="theComment">Comment:</label>
+            <textarea id="theComment" name="theComment" class="form-control" required th:text="${comment.theComment}"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Comment</button>
+        <a href="javascript:history.back()" class="btn btn-secondary ml-2">Cancel</a>
+    </form>
+</div>
+
+</body>
+
+</html>

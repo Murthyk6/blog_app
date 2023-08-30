@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Blogs</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container-fluid {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .filters{
+            width: 20%;
+            height:80vh;
+            padding: 20px;
+            flex-wrap: wrap;
+            border: 1px solid black;
+        }
+        .content{
+            margin-left: 5%;
+            width: 70%;
+        }
+        .blog-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .blog-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .blog-meta {
+            color: #999;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .btn-primary {
+            text-decoration: none;
+            color: black;
+            background-color: white;
+            border-color: black;
+            border: 1px solid;
+        }
+
+        .btn-primary:hover {
+            background-color: grey;
+            border-color: black;
+        }
+        a {
+            padding: 10px;
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .blog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #login-btn {
+            margin-left: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="filters">
+        <form th:action="@{/feed}">
+            <input type="hidden" name="search" th:value="${search}"/>
+            <div class="mb-4">
+                <h5>Filter by Author</h5>
+                    <label th:each="author : ${allAuthors}">
+                        <input type="checkbox" class="form-check-input" name="author" th:value="${author}" onclick="this.form.submit()"
+                               th:checked="${checkedAuthors != null and #strings.contains(checkedAuthors, author)}">
+                        <span th:text="${author}"></span>
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Filter by Tags</h5>
+                    <label th:each="tag : ${allTags}" th:if="${tag != ''}">
+                        <input type="checkbox" class="form-check-input" name="tag" th:value="${tag}" onclick="this.form.submit()"
+                               th:checked="${checkedTags != null and #strings.contains(checkedTags, tag)}">
+                        <span th:text="${tag}"></span>
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Filter by Publish At</h5>
+                    <label for="fromTimestamp">From:</label>
+                    <input type="datetime-local" class="form-control" id="fromTimestamp" name="fromTimestamp" ><br><br>
+                    <label for="toTimestamp">To:</label>
+                    <input type="datetime-local" id="toTimestamp" class="form-control" name="toTimestamp">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Apply Filters</button><br>
+            </form>
+        </div>
+    <div class="content">
+        <div class="col-md-9">
+            <div>
+                <h3 class="blog-header">Blogs
+                    <span sec:authorize="isAuthenticated()">
+                    Welcome, <a th:href="@{/profile}" th:text="${user.name}"></a>!
+                    </span>
+                    <span sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/userLogin}" id="login-btn" class="btn btn-primary">Login</a>
+                    </span>
+                    <span sec:authorize="isAuthenticated()">
+                        <form action="#" th:action="@{/logout}" method="POST">
+                            <input type="submit" class="btn btn-primary" value="Logout">
+                        </form>
+                    </span>
+                </h3>
+            </div>
+
+            <hr>
+            <form th:action="@{/feed}">
+                search : <input type="text" id="search" name="search" th:value="${search}">
+                <input type="submit" class="btn btn-primary" value="search">
+            </form>
+            <br>
+            <span th:if="${toTimestamp == null && fromTimestamp == null}" class="nav">
+            <a class="btn btn-link" th:with="search=${search}"
+               th:href="@{/feed(page=1, sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, author=${checkedAuthors}, tag=${checkedTags},
+                       search=${search})}">
+                Sort by Published Date</a>
+            </span>
+
+            <span th:if="${toTimestamp != null || fromTimestamp != null}" class="nav">
+            <a class="btn btn-link" th:with="search=${search}"
+               th:href="@{/feed(page=1, sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'}, author=${checkedAuthors}, tag=${checkedTags},
+                       search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
+                Sort by Published Date</a>
+            </span>
+
+            Sort: <span th:text="${sortDirection == 'asc' ? 'Oldest' : 'Newest'}" class="nav"></span>
+
+            <a class="btn btn-primary" th:href="@{/blog/createPost}">Create Blog</a>
+
+            <a th:href="@{/feed}" class="nav">Clear all</a>
+            <br><br>
+            <span th:if = "${!#strings.isEmpty(search)}">
+                <span>Search Results For :<b th:text="${search}"></b></span>
+            </span><br><br>
+
+            <span>  Results : <b th:text="${count}"></b></span><br><br>
+
+            <div class="blogs">
+                <span th:each="tempBlog : ${blogs}" class="blog-card">
+                    <div >
+                        <h4 class="blog-title" th:text="${tempBlog.title}"></h4>
+                        <p class="blog-excerpt" th:text="${tempBlog.excerpt}"></p>
+                        <p class="blog-meta">
+                            Author: <span th:text="${tempBlog.author}"></span><br>
+                            Published: <span th:text="${tempBlog.publishedAt}"></span>
+                        </p>
+                        <p class="blog-tags">
+                            Tags:
+                            <span th:each="tag : ${tempBlog.tags}">
+                        <span th:text="${tag.name}"></span>
+                    </span>
+                        </p>
+                        <br>
+                        <a th:href="@{/blog/full_post(postId=${tempBlog.id})}" class="btn btn-primary">Read More</a>
+                        <br>
+                    </div>
+                </span>
+            </div>
+
+
+<!--                <div>-->
+<!--                    <a th:if="${currentPage < totalPages}"-->
+<!--                       th:href="@{|feed?page=${currentPage + 1}${url}|}">-->
+<!--                        <input type="hidden" name="page" th:value="${currentPage + 1}">-->
+<!--                        Next Page-->
+<!--                    </a>-->
+<!--                </div>-->
+
+<!--                <div>-->
+<!--                    <a th:if="${currentPage > 1}"-->
+<!--                       th:href="@{|feed?page=${currentPage -1}${url}|}">-->
+<!--                        <input type="hidden" name="page" th:value="${currentPage - 1}">-->
+<!--                        Previous Page-->
+<!--                    </a>-->
+<!--                </div>-->
+
+
+<!--        <span th:if="${toTimestamp == null && fromTimestamp == null}">-->
+<!--            <ul class="pagination justify-content-center">-->
+<!--                <li class="page-item" th:if="${currentPage > 1 }">-->
+<!--                    <a class="page-link" th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, ${url}, author=${checkedAuthors}, tag=${checkedTags})}">-->
+<!--                        Previous Page  |</a>-->
+<!--                </li>-->
+
+<!--                <li class="page-item" th:if="${currentPage < totalPages}">-->
+<!--                    <a class="page-link" th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, ${url}, author=${checkedAuthors}, tag=${checkedTags})}">-->
+<!--                         Next Page</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </span>-->
+
+                <span th:if="${toTimestamp == null && fromTimestamp == null}">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:if="${currentPage > 1 }">
+                            <a class="page-link" th:with="search=${search}"
+                               th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search}, author=${checkedAuthors}, tag=${checkedTags})}">
+                        Previous Page  |</a>
+                </li>
+
+                <li class="page-item" th:if="${currentPage < totalPages}">
+                 <a class="page-link" th:with="search=${search}"
+                    th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search}, author=${checkedAuthors}, tag=${checkedTags})}">
+                        Next Page</a>
+                </li>
+            </ul>
+            </span>
+
+
+            <span th:if="${toTimestamp != null || fromTimestamp != null}">
+                <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${currentPage > 1 }">
+                    <a class="page-link" th:with="search=${search}"
+                       th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, author=${checkedAuthors}, tag=${checkedTags}, fromTimestamp=${fromTimestamp}, toTimestamp=${toTimestamp},
+                       search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
+                        Previous Page  |</a>
+                </li>
+
+                <li class="page-item" th:if="${currentPage < totalPages}">
+                 <a class="page-link" th:with="search=${search}"
+                    th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, author=${checkedAuthors}, tag=${checkedTags}, fromTimestamp=${fromTimestamp}, toTimestamp=${toTimestamp},
+                       search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
+                        Next Page</a>
+                </li>
+            </ul>
+            </span>
+        </div>
+
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>'
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .logout-form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .submit-button {
+            background-color: white;
+            color: black;
+            border: 1px solid;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: grey;
+            color: white;
+            border: 1px solid;
+
+        }
+
+
+    </style>
+</head>
+<body>
+<a th:href="@{/feed}">Back to feed</a>
+<form action="#" th:action="@{/logout}" method="POST">
+    <input type="submit" class="btn btn-primary" value="Logout">
+</form>
+<hr>
+<h2>Your Published Post</h2>
+<hr>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Excerpt</th>
+        <th>Author</th>
+        <th>Tags</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="post : ${publishedPosts}">
+        <td th:text="${post.title}"></td>
+        <td th:text="${post.excerpt}"></td>
+        <td th:text="${post.author}"></td>
+
+        <td>
+        <span th:each="tag, tagStat : ${post.tags}">
+            <span th:text="${tag.name}"></span>
+            <span th:if="${!tagStat.last}">, </span>
+        </span>
+        </td>
+        <td>
+            <form th:action="@{/blog/edit}" method="POST">
+                <input type="hidden" name="saveType" value="draft">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <input class="submit-button" type="submit" value="Update">
+            </form>
+            <form th:action="@{/blog/delete}" method="POST">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <input class="submit-button" type="submit" value="Delete">
+            </form>
+        </td>
+    </tr>
+</table>
+
+<hr>
+<h2>Your Draft Post</h2>
+<hr>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Excerpt</th>
+        <th>Author</th>
+        <th>Tags</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="post : ${draftPosts}">
+        <td th:text="${post.title}"></td>
+        <td th:text="${post.excerpt}"></td>
+        <td th:text="${post.author}"></td>
+
+        <td>
+        <span th:each="tag, tagStat : ${post.tags}">
+            <span th:text="${tag.name}"></span>
+            <span th:if="${!tagStat.last}">, </span>
+        </span>
+        </td>
+        <td>
+            <form th:action="@{/blog/edit}" method="POST">
+                <input type="hidden" name="saveType" value="draft">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <input class="submit-button" type="submit" value="Update">
+            </form>
+            <form th:action="@{/blog/delete}" method="POST">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <input class="submit-button" type="submit" value="Delete">
+            </form>
+            <form th:action="@{/blog/save}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}">
+                <input class="submit-button" type="submit" value="Publish">
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
