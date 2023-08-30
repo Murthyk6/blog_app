@@ -19,10 +19,10 @@ public class PostTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     public PostTag() {
