@@ -7,6 +7,7 @@ import com.murthy.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -47,6 +48,7 @@ public class PostServiceImplementation implements com.murthy.blog.service.PostSe
     }
 
     @Override
+    @Transactional
     public void deleteById(int id) {
         commentService.deleteByPostId(id);
         postRepository.deleteById(id);

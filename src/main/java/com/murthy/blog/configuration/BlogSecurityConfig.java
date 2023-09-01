@@ -41,8 +41,7 @@ public class BlogSecurityConfig {
                                 .permitAll()
                 )
                 .logout(logout->
-                        logout
-                                .permitAll()
+                        logout.permitAll()
                 )
                 .exceptionHandling(configurer ->
                         configurer.accessDeniedPage("/access-denied")

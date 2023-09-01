@@ -18,6 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
     List<Post> findAll();
 
     Optional<Post>findById(int id);
+
     @Query("SELECT p FROM Post p WHERE " +
             "p.isPublished = TRUE AND"+
             "(LOWER(p.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +

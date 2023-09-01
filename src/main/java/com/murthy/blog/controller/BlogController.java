@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -144,7 +143,6 @@ public class BlogController {
     }
 
     @PostMapping("/delete")
-    @Transactional
     public String deletePost(@RequestParam("postId") int postId, Model model) {
         postService.deleteById(postId);
         return "redirect:/feed";
