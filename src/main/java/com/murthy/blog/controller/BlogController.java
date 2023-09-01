@@ -97,8 +97,16 @@ public class BlogController {
             }
         }
 
-        int fullStop = post.getContent().indexOf(".");
-        post.setExcerpt(post.getContent().substring(0, fullStop!=0 ? fullStop : 20));
+        String content = post.getContent();
+        int fullStop = content.indexOf(".");
+        String excerpt;
+
+        if (fullStop != -1) {
+            excerpt = content.substring(0, fullStop + 1);
+        } else {
+            excerpt = content.length() > 10 ? content.substring(0, 10) : content;
+        }
+        post.setExcerpt(excerpt);
         post.setTags(tagSet);
 
         if (saveType.length() == 5) {
