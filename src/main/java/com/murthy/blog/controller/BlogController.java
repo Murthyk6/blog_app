@@ -109,7 +109,7 @@ public class BlogController {
         post.setExcerpt(excerpt);
         post.setTags(tagSet);
 
-        if (saveType.length() == 5) {
+        if ("draft".equals(saveType)) {
             post.setPublished(false);
         } else {
             post.setPublished(true);
@@ -122,7 +122,7 @@ public class BlogController {
         postService.save(post);
         model.addAttribute("post", post);
 
-        if (saveType.length() == 5) {
+        if ("draft".equals(saveType)) {
             return "redirect:/profile";
         } else {
             return "redirect:/blog/full_post?postId=" + post.getId();
