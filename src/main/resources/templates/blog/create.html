@@ -75,9 +75,9 @@
     </span>
     <span sec:authorize="isAuthenticated()">
        <div class="mb-3" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
-      <label for="author" class="form-label">Author</label>
-      <input type="text" class="form-control" name="author" th:value="${post.author}" required>
-    </div>
+         <label for="author" class="form-label">Author</label>
+         <input type="text" class="form-control" name="author" th:value="${post.author}" required>
+       </div>
     </span>
     <div class="mb-3">
       <label for="content" class="form-label">Content</label>
@@ -95,10 +95,8 @@
     </div>
     <button type="submit" class="btn btn-secondary ml-2" name="saveType" value="draft">Draft</button>
     <button type="submit" class="btn btn-primary" name="saveType" value="publish">Publish</button>
-
     <a href="javascript:history.back()" class="btn btn-secondary ml-2">Cancel</a>
   </form>
 </div>
-
 </body>
 </html>

@@ -209,76 +209,44 @@
                 </span>
             </div>
 
-
-<!--                <div>-->
-<!--                    <a th:if="${currentPage < totalPages}"-->
-<!--                       th:href="@{|feed?page=${currentPage + 1}${url}|}">-->
-<!--                        <input type="hidden" name="page" th:value="${currentPage + 1}">-->
-<!--                        Next Page-->
-<!--                    </a>-->
-<!--                </div>-->
-
-<!--                <div>-->
-<!--                    <a th:if="${currentPage > 1}"-->
-<!--                       th:href="@{|feed?page=${currentPage -1}${url}|}">-->
-<!--                        <input type="hidden" name="page" th:value="${currentPage - 1}">-->
-<!--                        Previous Page-->
-<!--                    </a>-->
-<!--                </div>-->
-
-
-<!--        <span th:if="${toTimestamp == null && fromTimestamp == null}">-->
-<!--            <ul class="pagination justify-content-center">-->
-<!--                <li class="page-item" th:if="${currentPage > 1 }">-->
-<!--                    <a class="page-link" th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, ${url}, author=${checkedAuthors}, tag=${checkedTags})}">-->
-<!--                        Previous Page  |</a>-->
-<!--                </li>-->
-
-<!--                <li class="page-item" th:if="${currentPage < totalPages}">-->
-<!--                    <a class="page-link" th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, ${url}, author=${checkedAuthors}, tag=${checkedTags})}">-->
-<!--                         Next Page</a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </span>-->
-
-                <span th:if="${toTimestamp == null && fromTimestamp == null}">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:if="${currentPage > 1 }">
-                            <a class="page-link" th:with="search=${search}"
-                               th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search}, author=${checkedAuthors}, tag=${checkedTags})}">
-                        Previous Page  |</a>
-                </li>
-
-                <li class="page-item" th:if="${currentPage < totalPages}">
-                 <a class="page-link" th:with="search=${search}"
-                    th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search}, author=${checkedAuthors}, tag=${checkedTags})}">
-                        Next Page</a>
-                </li>
-            </ul>
+            <span th:if="${toTimestamp == null && fromTimestamp == null}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${currentPage > 1 }">
+                        <a class="page-link" th:with="search=${search}"
+                           th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search},
+                           author=${checkedAuthors}, tag=${checkedTags})}">
+                            Previous Page  |</a>
+                    </li>
+                    <li class="page-item" th:if="${currentPage < totalPages}">
+                        <a class="page-link" th:with="search=${search}"
+                           th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search},
+                           author=${checkedAuthors}, tag=${checkedTags})}">
+                            Next Page</a>
+                    </li>
+                </ul>
             </span>
-
 
             <span th:if="${toTimestamp != null || fromTimestamp != null}">
                 <ul class="pagination justify-content-center">
-                <li class="page-item" th:if="${currentPage > 1 }">
-                    <a class="page-link" th:with="search=${search}"
-                       th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, author=${checkedAuthors}, tag=${checkedTags}, fromTimestamp=${fromTimestamp}, toTimestamp=${toTimestamp},
-                       search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
-                        Previous Page  |</a>
-                </li>
+                    <li class="page-item" th:if="${currentPage > 1 }">
+                        <a class="page-link" th:with="search=${search}"
+                           th:href="@{/feed(page=${currentPage - 1}, sortDirection=${sortDirection}, author=${checkedAuthors},
+                           tag=${checkedTags}, search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
+                            Previous Page  |
+                        </a>
+                    </li>
 
-                <li class="page-item" th:if="${currentPage < totalPages}">
-                 <a class="page-link" th:with="search=${search}"
-                    th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, author=${checkedAuthors}, tag=${checkedTags}, fromTimestamp=${fromTimestamp}, toTimestamp=${toTimestamp},
-                       search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
-                        Next Page</a>
-                </li>
-            </ul>
+                    <li class="page-item" th:if="${currentPage < totalPages}">
+                     <a class="page-link" th:with="search=${search}"
+                        th:href="@{/feed(page=${currentPage + 1}, sortDirection=${sortDirection}, author=${checkedAuthors},
+                        tag=${checkedTags}, search=${search}, fromTimestamp=${fromTimestamp}, toTimeStamp=${toTimestamp})}">
+                         Next Page
+                     </a>
+                    </li>
+                </ul>
             </span>
         </div>
-
-</div>
+    </div>
 </div>
 </body>
-
 </html>
